@@ -1,16 +1,31 @@
-
+import './App.css'
+import { useApp } from '@/hooks/useApp'
+import { Dashboard } from './components/dashboard'
+import { Calendar } from './components/calendar'
+import { Settings } from './components/settings'
+import { AddHabitPage } from './components/addHabitModal'
+import { Navigation } from './components/navigation'
+import { AuthPage } from './components/auth'
 
 function App() {
+  const { currentView, darkMode, isAuthenticated } = useApp()
 
- return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-amber-400 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-        <h1 className="text-4xl font-bold text-purple-600 mb-4">🎯 HabitFlow</h1>
-        <p className="text-gray-600 mb-6">Build better habits, one day at a time</p>
-        <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
-          Get Started
-        </button>
+  if (isAuthenticated) {
+    return <AuthPage />
+  }
+
+  return (
+    <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'}`}>
+      <div className="max-w-md mx-auto pb-24 px-4 pt-4">
+        {currentView === 'dashboard' && <Dashboard />}
+
+        {currentView === 'calendar' && <Calendar />}
+
+        {currentView === 'settings' && <Settings />}
+        {currentView === 'addHabit' && <AddHabitPage />}
       </div>
+
+      <Navigation />
     </div>
   )
 }
