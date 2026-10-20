@@ -4,7 +4,7 @@ HabitFlow is a mobile-first habit tracker. This repository contains the web clie
 
 Users can sign up or log in, create habits with a frequency, colour and optional goal, tick them off each day, and see their progress as stats, a monthly calendar and a completion-rate chart.
 
-> **Status:** early development (`v0.0.0`). Several screens still use placeholder data or stubbed actions. See [Known limitations](#known-limitations) before relying on any feature.
+> **Status:** early development (`v0.0.0`). 
 
 ---
 
@@ -278,57 +278,10 @@ The frontend expects the backend to provide the endpoints below. Paths are relat
 
 ---
 
-## Data model
 
-These types are defined in `src/store/habitStore.ts`:
-
-```ts
-interface User {
-  id: string
-  email: string
-  name: string
-  darkMode?: boolean
-  reminderTime?: string
-}
-
-interface Habit {
-  habitId: string
-  name: string
-  emoji: string
-  color: string                      // hex, e.g. "#534ab7"
-  frequency: 'daily' | 'weekly' | 'custom'
-  goal?: string
-  selectedDays?: string[]            // "Mon".."Sun"; only for weekly/custom
-  isActive: boolean
-  currentStreak: number
-  longestStreak: number
-  createdAt: string
-  updatedAt: string
-}
-
-interface Completion {
-  completionId: string
-  habitId: string
-  completedDate: string              // "YYYY-MM-DD"
-  isCompleted: boolean
-  notes?: string
-  createdAt: string
-}
-
-interface Analytics {
-  todayCompleted: number
-  todayTotal: number
-  weekCompletionRate: number
-  longestStreak: number
-  activeDays: number
-  avgCompletion: number
-  perfectWeeks: number
-}
 ```
 
-Dates in completions are built with `new Date().toISOString().split('T')[0]`, so "today" is the **UTC** date, not the user's local date.
 
----
 
 ## Theming
 
@@ -351,23 +304,8 @@ Generated files go in `src/components/ui/`. Use `cn()` from `@/lib/utils` to mer
 
 ---
 
-## Known limitations
 
-These are the gaps in the current code. They're listed here so new contributors know what is real and what is a placeholder.
 
-| Area | Current behaviour |
-| --- | --- |
-| **Auth gate is inverted** | `App.tsx` renders `<AuthPage />` when `isAuthenticated` is **true** and the main app when it's false. Signed-out users see the dashboard, and signed-in users see the login page. The condition should be `isAuthenticated ? <main app> : <AuthPage />`. |
-| **Emoji picker missing** | `useAddHabit` requires an emoji before it submits, but `AddHabitPage` has no emoji picker, so creating a habit always fails with "Please select an emoji". |
-| **Calendar data is random** | `useCalendar` fills each month with `Math.random()` statuses. It doesn't call `analyticsService.getCalendarData` yet. |
-| **Chart data is static** | The dashboard doesn't pass an `onPeriodChange` callback to `CompletionChart`, so the chart shows hard-coded sample points and the period switcher has no effect. |
-| **Settings actions are stubbed** | Export data and Delete account only show an `alert()`. The reminder toggle and time live in component state and aren't saved. The matching `userService` methods exist but aren't called. |
-| **`/login` redirect** | On a 401 the interceptor sends the browser to `/login`, but the app has no such route. The redirect only works if the host serves `index.html` for unknown paths. |
-| **Token refresh** | `authService.refreshToken` exists but nothing calls it. An expired token logs the user out. |
-| **Unused dependency** | `react-router-dom` is installed but not used. |
-| **Tests** | There is no test suite yet. |
-
----
 
 ## Contributing
 
